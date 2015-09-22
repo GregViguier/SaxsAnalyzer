@@ -1,6 +1,6 @@
 import h5py
 
-__author__ = 'gregory'
+__author__ = 'GregViguier'
 
 
 def open_file(file_name):
@@ -8,15 +8,15 @@ def open_file(file_name):
     return result
 
 
-def load_image_at_index(file_name, index):
+def load_image_at_index(file_name, root_name, index):
     h5_file = open_file(file_name)
-    root_name = 'R16-19iso_0043'
     root_dict = h5_file[root_name]
     image_group = root_dict.get('image#' + str(index))
     image_data = image_group.__getitem__('data')
-    print image_data.shape
+    return image_data.value
 
 if __name__ == "__main__":
     load_image_at_index(
-        '/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs', 5)
+        '/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs',
+        'R16-19iso_0043', 5)
     # load_image_stack('test.h5')
