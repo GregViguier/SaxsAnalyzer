@@ -1,5 +1,5 @@
 import h5py
-import fnmatch
+
 __author__ = 'gregory'
 
 
@@ -8,18 +8,15 @@ def open_file(file_name):
     return result
 
 
-def load_image_stack(file_name):
+def load_image_at_index(file_name, index):
     h5_file = open_file(file_name)
-    rootName = 'R16-19iso_0043'
-    root = h5_file[rootName]
-
-    imagesGroup = fnmatch.filter(root, "image*")
-    for group in imagesGroup:
-        print group
-
-
-# def load_image_stack:
+    root_name = 'R16-19iso_0043'
+    root_dict = h5_file[root_name]
+    image_group = root_dict.get('image#' + str(index))
+    image_data = image_group.__getitem__('data')
+    print image_data.shape
 
 if __name__ == "__main__":
-    load_image_stack('/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs')
+    load_image_at_index(
+        '/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs', 5)
     # load_image_stack('test.h5')
