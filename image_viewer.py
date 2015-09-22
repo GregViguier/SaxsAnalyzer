@@ -10,7 +10,6 @@ def plot_image(arr):
 
 
 if __name__ == '__main__':
-    file_name = r'/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs'
     file_name = r'/home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs'
 
     imageData = hdfReader.load_image_at_index(file_name, 'buffer_0044', 5)

@@ -16,7 +16,7 @@ def load_image_at_index(file_name, root_name, index):
     return image_data.value
 
 if __name__ == "__main__":
-    load_image_at_index(
-        '/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs',
-        'R16-19iso_0043', 5)
+    data = load_image_at_index(
+        '/home/gregory/Work/Samples/NeXuS/ImageReducer/200Images/elisabeth_0043_2013-10-05_03-36-44.nxs', 'buffer_0044',
+        5)
     # load_image_stack('test.h5')
