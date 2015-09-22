@@ -1,5 +1,5 @@
 import h5py
-
+import fnmatch
 __author__ = 'gregory'
 
 
@@ -10,9 +10,11 @@ def open_file(file_name):
 
 def load_image_stack(file_name):
     h5_file = open_file(file_name)
-    group1 = h5_file['R16-19iso_0043']
+    rootName = 'R16-19iso_0043'
+    root = h5_file[rootName]
 
-    for group in group1.values():
+    imagesGroup = fnmatch.filter(root, "image*")
+    for group in imagesGroup:
         print group
 
 
