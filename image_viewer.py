@@ -6,8 +6,8 @@ import hdfReader
 def plot_image(arr):
     fig = plt.figure(figsize=(5, 5), dpi=80, facecolor='w', edgecolor='w', frameon=True)
     imAx = plt.imshow(arr, origin='lower', interpolation='nearest')
-    fig.colorbar(imAx, pad=0.01, fraction=0.1, shrink=1.00, aspect=20)
 
+    fig.colorbar(imAx, pad=0.01, fraction=0.1, shrink=1.00, aspect=20)
 
 if __name__ == '__main__':
     file_name = r'/home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs'
