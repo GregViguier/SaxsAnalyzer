@@ -29,6 +29,7 @@ class MainWindow(wx.Frame):
         self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         self.slider = wx.Slider(self, value=50, minValue=0, maxValue=100, style=wx.SL_LABELS)
         self.sizer2.Add(self.slider, 1, wx.GROW)
+        self.Bind(wx.EVT_SCROLL_CHANGED, self.OnImageChange, self.slider)
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.sizer.Add(self.control, 0, wx.EXPAND)
@@ -62,6 +63,9 @@ class MainWindow(wx.Frame):
         t = arange(0.0, 3.0, 0.01)
         s = sin(2 * pi * t)
         self.axes.plot(t, s)
+
+    def OnImageChange(self, e):
+        print str(self.slider.GetValue())
 
 
 app = wx.App(False)
