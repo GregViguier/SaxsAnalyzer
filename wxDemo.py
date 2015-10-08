@@ -8,6 +8,7 @@ import hdfReader
 
 matplotlib.use('WXAgg')
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.backends.backend_wxagg import NavigationToolbar2WxAgg as NavigationToolbar
 
@@ -42,22 +43,27 @@ class MainWindow(wx.Frame):
         self.sp.SplitHorizontally(self.p1, self.p2, 470)
         self.Show(True)
 
+        self.imAx = plt.imshow(self.load_data(0), origin='lower', interpolation='nearest', cmap=plt.get_cmap('jet'))
+
     def zoom(self, event):
         self.canvas.toolbar.zoom()
 
+
     def play(self, event):
-        for i in range(0, 50):
-            print i
-            self.plot_image(i)
-            # self.slider.SetValue(i)
-            # wx.Yield()
+        ani = animation.FuncAnimation(self.figure, self.plot_image, xrange(0, 50), interval=0, blit=True)
 
     def plot_image(self, index):
-        file_name = r'/home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs'
-        image_data = hdfReader.load_image_at_index(file_name, 'buffer_0044', index)
-        imAx = plt.imshow(image_data, origin='lower', interpolation='nearest')
+        print index
+        image_data = self.load_data(index)
+        self.imAx.set_array(image_data)
         # self.figure.colorbar(imAx, pad=0.01, fraction=0.1, shrink=1.00, aspect=20)
         # self.canvas.draw()
+        return image_data
+
+    def load_data(self, index):
+        file_name = r'/home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs'
+        image_data = hdfReader.load_image_at_index(file_name, 'buffer_0044', index)
+        return image_data
 
     def OnImageChange(self, e):
         self.plot_image(self.slider.GetValue())
