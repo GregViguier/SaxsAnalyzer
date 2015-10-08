@@ -1,74 +1,69 @@
 __author__ = 'GregViguier'
 
 import wx
-import os
-from numpy import arange, sin, pi
 
+import matplotlib
+
+import hdfReader
+
+matplotlib.use('WXAgg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
-
+from matplotlib.backends.backend_wxagg import NavigationToolbar2WxAgg as NavigationToolbar
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         wx.Frame.__init__(self, parent, title=title, size=(550, 450))
+
+        # SLIT THE WINDOW IN 2
+        self.sp = wx.SplitterWindow(self)
+
+        # INIT IMAGE VIEWER
+        self.p1 = wx.Panel(self.sp, style=wx.SUNKEN_BORDER)
         self.figure = plt.figure(figsize=(5, 5), dpi=80, facecolor='w', edgecolor='w', frameon=True)
         self.axes = self.figure.add_subplot(111)
-        self.control = FigureCanvas(self, -1, self.figure)
-        self.CreateStatusBar()
+        self.canvas = FigureCanvas(self.p1, -1, self.figure)
+        self.toolbar = NavigationToolbar(self.canvas)
+        self.toolbar.Hide()
 
-        # FILE MENU
-        filemenu = wx.Menu()
-        menuOpen = filemenu.Append(wx.ID_OPEN, "Open File", "Open a file")
-        filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program")
-        filemenu.AppendSeparator()
-        menuExit = filemenu.Append(wx.ID_EXIT, "E&xit", " Terminate the program")
-
-        self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
-        self.Bind(wx.EVT_MENU, self.OnOpen, menuOpen)
-
-        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.slider = wx.Slider(self, value=50, minValue=0, maxValue=100, style=wx.SL_LABELS)
-        self.sizer2.Add(self.slider, 1, wx.GROW)
+        # SLIDER + BUTTON
+        self.p2 = wx.Panel(self.sp, style=wx.SUNKEN_BORDER)
+        self.zoom_button = wx.Button(self.p2, -1, "Play", size=(40, 20), pos=(60, 10))
+        self.zoom_button.Bind(wx.EVT_BUTTON, self.play)
+        self.slider = wx.Slider(self.p2, value=0, minValue=0, maxValue=50, style=wx.SL_LABELS)
         self.Bind(wx.EVT_SCROLL_CHANGED, self.OnImageChange, self.slider)
 
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.control, 0, wx.EXPAND)
-        self.sizer.Add(self.sizer2, 0, wx.GROW)
+        # LAYOUT LOWER PANEL
+        self.box_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.box_sizer.Add(self.slider, 1, wx.EXPAND)
+        self.box_sizer.Add(self.zoom_button, 1, wx.GROW)
+        self.p2.SetSizer(self.box_sizer)
 
-        self.SetSizer(self.sizer)
-        self.SetAutoLayout(1)
-        self.sizer.Fit(self)
-
-        # MENU BAR
-        menubar = wx.MenuBar()
-        menubar.Append(filemenu, "File")
-        self.SetMenuBar(menubar)
+        self.sp.SplitHorizontally(self.p1, self.p2, 470)
         self.Show(True)
 
-    def OnExit(self, e):
-        self.Close(True)
+    def zoom(self, event):
+        self.canvas.toolbar.zoom()
 
-    def OnOpen(self, e):
-        self.dirname = ''
-        dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
-        if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
-            f = open(os.path.join(self.dirname, self.filename), 'r')
-            self.control.SetValue(f.read())
-            f.close()
-        dlg.Destroy()
+    def play(self, event):
+        for i in range(0, 50):
+            print i
+            self.plot_image(i)
+            # self.slider.SetValue(i)
+            # wx.Yield()
 
-    def draw(self):
-        t = arange(0.0, 3.0, 0.01)
-        s = sin(2 * pi * t)
-        self.axes.plot(t, s)
+    def plot_image(self, index):
+        file_name = r'/home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs'
+        image_data = hdfReader.load_image_at_index(file_name, 'buffer_0044', index)
+        imAx = plt.imshow(image_data, origin='lower', interpolation='nearest')
+        # self.figure.colorbar(imAx, pad=0.01, fraction=0.1, shrink=1.00, aspect=20)
+        # self.canvas.draw()
 
     def OnImageChange(self, e):
-        print str(self.slider.GetValue())
+        self.plot_image(self.slider.GetValue())
+
 
 
 app = wx.App(False)
 frame = MainWindow(None, "Small Editor")
-frame.draw()
 app.MainLoop()
