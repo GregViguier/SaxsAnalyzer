@@ -14,9 +14,3 @@ def load_image_at_index(file_name, root_name, index):
     image_group = root_dict.get('image#' + str(index))
     image_data = image_group.__getitem__('data')
     return image_data.value
-
-if __name__ == "__main__":
-    data = load_image_at_index(
-        'home/gregory/Dropbox/elisabeth_0044_2013-10-05_04-10-19.nxs', 'buffer_0044',
-        5)
-    # load_image_stack('test.h5')

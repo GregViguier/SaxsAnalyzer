@@ -1,11 +1,9 @@
 __author__ = 'GregViguier'
 
 import wx
-
 import matplotlib
 
 import hdfReader
-
 matplotlib.use('WXAgg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -50,7 +48,6 @@ class MainWindow(wx.Frame):
         self.canvas.toolbar.zoom()
 
     def play(self, event):
-        print "PLAY"
         ani = animation.FuncAnimation(self.figure, self.plot_image, np.arange(0, 49), interval=1, blit=True,
                                       repeat=False)
         self.image.show()
