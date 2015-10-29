@@ -20,32 +20,11 @@ def worker(index):
     q, I, Sigma = ai.integrate1d(
         data, 1024, mask=mask, unit="q_A^-1", error_model="poisson",
         polarization_factor=None, method="cython")
-    qValues[index] = q
-    iValues[index] = I
-    sValues[index] = Sigma
     return q, I, Sigma
 
 
-class computeThread(threading.Thread):
-
-    def __init__(self, index):
-        threading.Thread.__init__(self)
-        self.index = index
-
-    def run(self):
-        data = hdfReader.load_image_at_index(filename, entryname, self.index)
-        q, I, Sigma = ai.integrate1d(
-            data, 1024, mask=mask, unit="q_A^-1", error_model="poisson",
-            polarization_factor=None, method="cython")
-        qValues[self.index] = q
-        iValues[self.index] = I
-        sValues[self.index] = Sigma
-
 start_time = time.time()
-qValues = [None] * 50
-iValues = [None] * 50
-sValues = [None] * 50
-threads = [None] * 50
+
 
 # Load MASK
 mask = np.genfromtxt("GV2.txt", delimiter=";", dtype=int)
