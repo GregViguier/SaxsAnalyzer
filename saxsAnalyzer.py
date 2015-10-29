@@ -5,6 +5,7 @@ import hdfReader
 import time
 import threading
 import multiprocessing
+import concurrent.futures
 from multiprocessing import Pool
 
 
@@ -57,22 +58,11 @@ ai.set_pixel2(0.000004)
 ai.set_poni2(0)
 ai.set_poni1(0)
 
-# with Pool(processes=8) as pool:
-#     mapResult = pool.map(worker, range(49))
+with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+	mapResult = executor.map(worker, range(49))
 
-# for t in mapResult:
-# 	plt.plot(t[0], t[1])
-
-
-for x in range(0, 49):
-    #threads[x] = multiprocessing.Process(target=worker, args=(x,))
-    threads[x] = computeThread(x)
-    threads[x].start()
-
-for x in range(0, 49):
-	threads[x].join()
-	# plt.errorbar(qValues[x], iValues[x], sValues[x])
-	plt.plot(qValues[x], iValues[x])
+for t in mapResult:
+	plt.plot(t[0], t[1])
 
 print("--- %s seconds ---" % (time.time() - start_time))
 plt.show()
