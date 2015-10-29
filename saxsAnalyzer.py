@@ -3,11 +3,8 @@ import matplotlib.pyplot as plt
 import pyFAI.azimuthalIntegrator
 import hdfReader
 import time
-import threading
-import multiprocessing
 import concurrent.futures
-from multiprocessing import Pool
-
+from matplotlib.font_manager import FontProperties
 
 plt.style.use('ggplot')
 
@@ -20,11 +17,9 @@ def worker(index):
     q, I, Sigma = ai.integrate1d(
         data, 1024, mask=mask, unit="q_A^-1", error_model="poisson",
         polarization_factor=None, method="cython")
-    return q, I, Sigma
-
+    return index, q, I, Sigma
 
 start_time = time.time()
-
 
 # Load MASK
 mask = np.genfromtxt("GV2.txt", delimiter=";", dtype=int)
@@ -38,10 +33,20 @@ ai.set_poni2(0)
 ai.set_poni1(0)
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-	mapResult = executor.map(worker, range(49))
+    mapResult = executor.map(worker, range(49))
 
+
+fig, ax = plt.subplots()
 for t in mapResult:
-	plt.plot(t[0], t[1])
+    ax.plot(t[1], t[2])
+
+fontP = FontProperties()
+fontP.set_size('small')
+#plt.legend(range(0,49),bbox_to_anchor=(0.5, -0.5), loc='lower center', fancybox=True, shadow=True, ncol=2)
+
+
+
 
 print("--- %s seconds ---" % (time.time() - start_time))
+
 plt.show()
