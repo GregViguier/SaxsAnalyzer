@@ -1,14 +1,16 @@
 from flask import Flask
+import flask
 import saxsAnalyzer
-import json
 from nvd3 import lineWithFocusChart
-from nvd3 import lineChart
-from io import StringIO
 app = Flask(__name__)
 
 
 @app.route("/")
-def index():
+def root():
+    return flask.render_template('index.html')
+
+
+def indexOLD():
     chart = lineWithFocusChart(
         height=600, width='800', show_legend=False, name='lineWithFocusChart')
     data = saxsAnalyzer.getdata(5)
@@ -19,17 +21,23 @@ def index():
     return chart.htmlcontent
 
 
-@app.route("/saxs")
-def circlegathering():
+def get_json_data():
     data = saxsAnalyzer.getdata(5)
-    json = "["
-    for index,saxsdata in enumerate(data):
+    json_data = "["
+    for index, saxsdata in enumerate(data):
         I = saxsdata[1]
         Q = saxsdata[0]
-        for ivalue,qvalue in zip(I,Q):
-            json += "{\"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" :" +str(qvalue) + ", \"I\" :" + str(ivalue) + "},"
-        json += "]"
-    return json
+        for ivalue, qvalue in zip(I, Q):
+            json_data += "{\"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" :" + str(
+                qvalue) + ", \"I\" :" + str(ivalue) + "},"
+    json_data = json_data[:-1]
+    json_data += "]"
+    return json_data
+
+
+@app.route("/saxs")
+def saxs_data():
+    return get_json_data()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

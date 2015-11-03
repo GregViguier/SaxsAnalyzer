@@ -18,7 +18,8 @@ def getdata(nb_images=49):
     ai.set_poni2(0)
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
-    mapresult = executor.map(worker, *(range(nb_images), repeat(ai), repeat(mask)))
+    mapresult = executor.map(
+        worker, *(range(nb_images), repeat(ai), repeat(mask)))
     return mapresult
 
 
