@@ -28,8 +28,8 @@ def get_json_data():
         I = saxsdata[1]
         Q = saxsdata[0]
         for ivalue, qvalue in zip(I, Q):
-            json_data += "{\"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" :" + str(
-                qvalue) + ", \"I\" :" + str(ivalue) + "},"
+            json_data += "{ \"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" : " + str(
+                qvalue) + ", \"I\" : " + str(ivalue) + " },"
     json_data = json_data[:-1]
     json_data += "]"
     return json_data

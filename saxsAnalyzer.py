@@ -7,7 +7,7 @@ from itertools import repeat
 
 def getdata(nb_images=49):
     # Load MASK
-    mask = np.genfromtxt("GV2.txt", delimiter=";",
+    mask = np.genfromtxt("mask.txt", delimiter=";",
                          dtype=int)
     ai = pyFAI.AzimuthalIntegrator()
     ai.set_wavelength(0.0000000001033)
