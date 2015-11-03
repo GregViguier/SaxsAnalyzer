@@ -29,11 +29,13 @@ queue()
     .await(makeGraphs);
 
 function makeGraphs(error, saxs_data){
-  var ndx = crossfilter(saxs_data);
+  var ndx = crossfilter(light_saxs_data);
   var qdim = ndx.dimension(function(d){ return d.Q;})
-  var qgroup = qdim.group().reduce(function(d) {return d.name;});
+  var qgroup = qdim.group().reduceSum(function(d) {return d.I;});
 
   var hitslineChart  = dc.lineChart("#chart-line");
+
+  print_filter(qgroup)
 
   hitslineChart
   .width(500).height(200)
