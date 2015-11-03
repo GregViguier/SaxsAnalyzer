@@ -22,17 +22,21 @@ def indexOLD():
 
 
 def get_json_data():
-    data = saxsAnalyzer.getdata(5)
-    json_data = "["
-    for index, saxsdata in enumerate(data):
-        I = saxsdata[1]
-        Q = saxsdata[0]
-        for ivalue, qvalue in zip(I, Q):
-            json_data += "{ \"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" : " + str(
-                qvalue) + ", \"I\" : " + str(ivalue) + " },"
-    json_data = json_data[:-1]
-    json_data += "]"
-    return json_data
+    data = list(saxsAnalyzer.getdata(5))
+
+    q_values = data[0][0]
+
+    #json_data = "["
+    # for index, saxsdata in enumerate(data):
+    #     I = saxsdata[1]
+    #     Q = saxsdata[0]
+        # for ivalue, qvalue in zip(I, Q):
+        #     json_data += "{ \"name\": \"Azimuthal " + str(index) + "\"" + ", \"Q\" : " + str(
+        #         qvalue) + ", \"I\" : " + str(ivalue) + " },"
+    #json_data = json_data[:-1]
+    #json_data += "]"
+    #json_data q_values1]
+    return q_values
 
 
 @app.route("/saxs")

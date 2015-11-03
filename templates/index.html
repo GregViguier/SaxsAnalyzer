@@ -6,6 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF8">
 </head>
 <body>
+
 <div id="chart-line"></div>
 
 <script type="text/javascript" src="{{ url_for('static',filename='js/d3.js')}}"></script>
@@ -22,25 +23,26 @@ function print_filter(filter){
   console.log(filter+"("+f.length+") = "+JSON.stringify(f).replace("[","[\n\t").replace(/}\,/g,"},\n\t").replace("]","\n]"));
 }
 
-var light_saxs_data = [{ "name": "Azimuthal 0", "Q" : 0.000509267398277, "I" : 537.0 },{ "name": "Azimuthal 0", "Q" : 0.000531230432961, "I" : 571.75 },{ "name": "Azimuthal 0", "Q" : 0.000553193467645, "I" : 565.8 },{ "name": "Azimuthal 0", "Q" : 0.000575156502329, "I" : 569.0 },{ "name": "Azimuthal 0", "Q" : 0.000597119537014, "I" : 578.466666667 },{ "name": "Azimuthal 0", "Q" : 0.000619082571698, "I" : 583.238095238 },{ "name": "Azimuthal 0", "Q" : 0.000641045606382, "I" : 557.2 },{ "name": "Azimuthal 0", "Q" : 0.000663008641066, "I" : 566.714285714 },{ "name": "Azimuthal 0", "Q" : 0.000684971675751, "I" : 566.75862069 },{ "name": "Azimuthal 0", "Q" : 0.000706934710435, "I" : 568.575757576 },{ "name": "Azimuthal 0", "Q" : 0.000728897745119, "I" : 578.162162162 },{ "name": "Azimuthal 0", "Q" : 0.000750860779803, "I" : 563.25 },{ "name": "Azimuthal 0", "Q" : 0.000772823814487, "I" : 581.30952381 },{ "name": "Azimuthal 0", "Q" : 0.000794786849172, "I" : 578.02173913 },{ "name": "Azimuthal 1", "Q" : 0.000816749883856, "I" : 565.666666667 }]
+var light_saxs_data = [{ "name": "Azimuthal 0", "Q" : 0.000509267398277, "I" : 537.0 },{ "name": "Azimuthal 0", "Q" : 0.000531230432961, "I" : 571.75 },{ "name": "Azimuthal 0", "Q" : 0.000553193467645, "I" : 565.8 },{ "name": "Azimuthal 0", "Q" : 0.000575156502329, "I" : 569.0 },{ "name": "Azimuthal 0", "Q" : 0.000597119537014, "I" : 578.466666667 },{ "name": "Azimuthal 0", "Q" : 0.000619082571698, "I" : 583.238095238 },{ "name": "Azimuthal 0", "Q" : 0.000641045606382, "I" : 557.2 },{ "name": "Azimuthal 0", "Q" : 0.000663008641066, "I" : 566.714285714 },{ "name": "Azimuthal 0", "Q" : 0.000684971675751, "I" : 566.75862069 },{ "name": "Azimuthal 0", "Q" : 0.000706934710435, "I" : 568.575757576 },{ "name": "Azimuthal 0", "Q" : 0.000728897745119, "I" : 578.162162162 },{ "name": "Azimuthal 0", "Q" : 0.000750860779803, "I" : 563.25 },{ "name": "Azimuthal 0", "Q" : 0.000772823814487, "I" : 581.30952381 },{ "name": "Azimuthal 0", "Q" : 0.000794786849172, "I" : 578.02173913 },{ "name": "Azimuthal 1", "Q" : 0.000816749883856, "I" : 565.666666667 }];
 
-queue()
+<!--
+  queue()
     .defer(d3.json, "/saxs")
     .await(makeGraphs);
+//-->
 
 function makeGraphs(error, saxs_data){
   var ndx = crossfilter(light_saxs_data);
   var qdim = ndx.dimension(function(d){ return d.Q;})
-  var qgroup = qdim.group().reduceSum(function(d) {return d.I;});
-
+  var namedim = qdim.group();
   var hitslineChart  = dc.lineChart("#chart-line");
 
-  print_filter(qgroup)
+  print_filter(namedim)
 
   hitslineChart
   .width(500).height(200)
   .dimension(qdim)
-  .group(qgroup)
+  .group(groupName)
   .x(d3.scale.linear().domain([0.000641045606382,0.000684971675751]))
   dc.renderAll()
 }
