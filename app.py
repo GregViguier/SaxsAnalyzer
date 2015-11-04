@@ -24,9 +24,18 @@ def indexOLD():
 def get_json_data():
     data = list(saxsAnalyzer.getdata(5))
 
+    json_data = "["
     q_values = data[0][0]
+    for indexq, q in enumerate(q_values):
+        json_data += "{ \"Q\" : " + str(q_values[indexq]) + ", \"values\" : {"
+        for indexi, i in enumerate(data):
+            intensity = data[indexi][1][indexq]
+            json_data += " \"Azimuthal" + str(indexi) + "\": " + str(intensity) + ","
+        json_data = json_data[:-1]
+        json_data += "} },"
+    json_data = json_data[:-1]
+    json_data += "]"
 
-    #json_data = "["
     # for index, saxsdata in enumerate(data):
     #     I = saxsdata[1]
     #     Q = saxsdata[0]
@@ -35,8 +44,8 @@ def get_json_data():
         #         qvalue) + ", \"I\" : " + str(ivalue) + " },"
     #json_data = json_data[:-1]
     #json_data += "]"
-    #json_data q_values1]
-    return q_values
+    # json_data q_values1]
+    return json_data
 
 
 @app.route("/saxs")

@@ -32,17 +32,16 @@ var light_saxs_data = [{ "name": "Azimuthal 0", "Q" : 0.000509267398277, "I" : 5
 //-->
 
 function makeGraphs(error, saxs_data){
-  var ndx = crossfilter(light_saxs_data);
+  var ndx = crossfilter(saxs_data);
   var qdim = ndx.dimension(function(d){ return d.Q;})
-  var namedim = qdim.group();
   var hitslineChart  = dc.lineChart("#chart-line");
 
-  print_filter(namedim)
+  print_filter(qdim)
 
   hitslineChart
   .width(500).height(200)
   .dimension(qdim)
-  .group(groupName)
+  .group(function(d) {return d.values.Azimuthal0;})
   .x(d3.scale.linear().domain([0.000641045606382,0.000684971675751]))
   dc.renderAll()
 }
