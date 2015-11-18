@@ -22,7 +22,7 @@ def indexOLD():
 
 
 def get_json_data():
-    data = list(saxsAnalyzer.getdata(5))
+    data = list(saxsAnalyzer.getdata())
 
     json_data = "["
     q_values = data[0][0]
